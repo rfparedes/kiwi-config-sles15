@@ -1,2 +1,64 @@
-# kiwi-config-sles15
-# kiwi-config-sles15
+These steps should be performed on SLES15 kiwi build server.
+
+1. Make sure at least the following packages are installed:
+	kiwi-templates-SLES15-JeOS-15-25.1.noarch
+	python3-kiwi
+	kiwi-tools
+	
+2. Modify /usr/share/kiwi/image/suse-SLE15-Enterprise-JeOS/JeOS.kiwi to your needs.
+   Specifically, you will need to adjust the repositories.
+   a. Remove all instances of <repository>
+   b. Add <repository> matching your environment.  For instance, these repositories 
+      added will pull packages from RMT server:
+      
+    <repository type="rpm-md" alias="sle-product-sles15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Product-SLES/15/x86_64/product"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-server-applications15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Server-Applications/15/x86_64/product/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-basesystem15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Basesystem/15/x86_64/product/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-product-sles15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Product-SLES/15/x86_64/update"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-server-applications15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Server-Applications/15/x86_64/update/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-basesystem15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Basesystem/15/x86_64/update/"/>
+    </repository>
+    <repository type="rpm-md" alias="sle-module-public-cloud-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Public-Cloud/15/x86_64/update/"/>
+    </repository>
+    <repository type="rpm-md" alias="sle-module-public-cloud-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Public-Cloud/15/x86_64/product/"/>
+    </repository>
+
+	c. Remove <package name="jeos-firstboot"/>
+	   Remove <package name="jeos-licenses"/>
+	   
+3. Modify /usr/share/kiwi/image/suse-SLE15-Enterprise-JeOS/images.sh
+	a. Remove any instances to jeos-firstboot.server (you will be removing 3 lines). 
+	   Remove the entire line:
+
+	        systemctl mask jeos-firstboot.service
+        	systemctl mask jeos-firstboot.service
+        	systemctl enable jeos-firstboot.service
+        	
+4. Modify /usr/share/kiwi/image/suse-SLE15-Enterprise-JeOS/config.sh to suit your needs.
+   You can change root password, add users, enable/disable services, etc. to
+   customize the image
+   
+5. Build your image:
+
+   kiwi --type vmx --profile=VMware system build --description /usr/share/kiwi/image/suse-SLE15-Enterprise-JeOS --target-dir /root/myimage
+   
+   Image will be built here:
+   
+[ INFO    ]: 13:25:37 | --> disk_format_image: /root/myimage/SLES15-JeOS.x86_64-15.0.vmdk
+[ INFO    ]: 13:25:37 | --> disk_format_machine_settings: /root/myimage/SLES15-JeOS.x86_64-15.0.vmx
+[ INFO    ]: 13:25:37 | --> disk_image: /root/myimage/SLES15-JeOS.x86_64-15.0.raw
+[ INFO    ]: 13:25:37 | --> image_packages: /root/myimage/SLES15-JeOS.x86_64-15.0.packages
+[ INFO    ]: 13:25:37 | --> image_verified: /root/myimage/SLES15-JeOS.x86_64-15.0.verified
