@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- OBS-Profiles: @BUILD_FLAVOR@ -->
+
+<image schemaversion="6.1" name="SLES15-JeOS" displayname="SLES 15">
+    <description type="system">
+        <author>SUSE Linux GmbH</author>
+        <contact>crc@suse.com</contact>
+        <specification>SUSE Linux Enterprise 15 JeOS</specification>
+    </description>
+    <profiles>
+        <profile name="kvm-and-xen" description="JeOS for KVM and HVM Xen" arch="x86_64"/>
+        <profile name="XEN" description="JeOS for PV Xen" arch="x86_64"/>
+        <profile name="VMware" description="JeOS for VMware" arch="x86_64"/>
+        <profile name="MS-HyperV" description="JeOS for Hyper-V" arch="x86_64"/>
+        <profile name="OpenStack-Cloud" description="JeOS for OpenStack Cloud" arch="x86_64"/>
+        <profile name="RaspberryPi" description="JeOS for the Raspberry Pi" arch="aarch64"/>
+    </profiles>
+    <preferences profiles="kvm-and-xen">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="vmx"
+            filesystem="btrfs"
+            format="qcow2"
+            bootloader="grub2"
+            firmware="uefi"
+            efipartsize="33"
+            kernelcmdline="plymouth.enable=0 console=ttyS0,115200 console=tty0"
+            bootpartition="false"
+            bootkernel="custom"
+            devicepersistency="by-label"
+            btrfs_root_is_snapshot="true"
+        >
+            <systemdisk>
+                <volume name="home"/>
+                <volume name="root"/>
+                <volume name="tmp"/>
+                <volume name="opt"/>
+                <volume name="srv"/>
+                <volume name="boot/grub2/i386-pc"/>
+                <volume name="boot/grub2/x86_64-efi" mountpoint="boot/grub2/x86_64-efi"/>
+                <volume name="usr/local"/>
+                <volume name="var" copy_on_write="false"/>
+            </systemdisk>
+            <size unit="G">24</size>
+        </type>
+    </preferences>
+
+    <preferences profiles="XEN">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="vmx"
+            filesystem="btrfs"
+            bootprofile="xen"
+            firmware="uefi"
+            efipartsize="33"
+            format="qcow2"
+            bootloader="grub2"
+            kernelcmdline="plymouth.enable=0 console=tty0"
+            bootpartition="false"
+            bootkernel="custom"
+            devicepersistency="by-label"
+            btrfs_root_is_snapshot="true"
+        >
+            <systemdisk>
+                <volume name="home"/>
+                <volume name="root"/>
+                <volume name="tmp"/>
+                <volume name="opt"/>
+                <volume name="srv"/>
+                <volume name="boot/grub2/i386-pc"/>
+                <volume name="boot/grub2/x86_64-efi" mountpoint="boot/grub2/x86_64-efi"/>
+                <volume name="usr/local"/>
+                <volume name="var" copy_on_write="false"/>
+            </systemdisk>
+            <size unit="G">24</size>
+            <machine domain="domU">
+                <!-- creation of hvmloader Xen config file is not supported -->
+                <!-- thus just provide mandatory setup indicating there is a disk -->
+                <vmdisk id="0"/>
+            </machine>
+        </type>
+    </preferences>
+
+    <preferences profiles="VMware">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="vmx"
+            filesystem="btrfs"
+            format="vmdk"
+            bootloader="grub2"
+            firmware="uefi"
+            efipartsize="33"
+            kernelcmdline="plymouth.enable=0 console=ttyS0,115200 console=tty0"
+            bootpartition="false"
+            bootkernel="custom"
+            devicepersistency="by-label"
+            btrfs_root_is_snapshot="true"
+        >
+            <systemdisk>
+                <volume name="home"/>
+                <volume name="root"/>
+                <volume name="tmp"/>
+                <volume name="opt"/>
+                <volume name="srv"/>
+                <volume name="boot/grub2/i386-pc"/>
+                <volume name="boot/grub2/x86_64-efi" mountpoint="boot/grub2/x86_64-efi"/>
+                <volume name="usr/local"/>
+                <volume name="var" copy_on_write="false"/>
+            </systemdisk>
+            <size unit="G">24</size>
+            <machine memory="1024" HWversion="10" guestOS="sles-64"/>
+        </type>
+    </preferences>
+
+    <preferences profiles="OpenStack-Cloud">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="vmx"
+            filesystem="xfs"
+            format="qcow2"
+            vga="normal"
+            boottimeout="1"
+            bootloader="grub2"
+            firmware="uefi"
+            efipartsize="33"
+            kernelcmdline="plymouth.enable=0 console=ttyS0,115200 console=tty0 net.ifnames=0"
+            bootpartition="false"
+            bootkernel="custom"
+            devicepersistency="by-label"
+        />
+    </preferences>
+
+    <preferences profiles="MS-HyperV">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="vmx"
+            filesystem="btrfs"
+            format="vhdx"
+            boottimeout="10"
+            bootloader="grub2"
+            firmware="uefi"
+            efipartsize="33"
+            kernelcmdline="plymouth.enable=0 USE_BY_UUID_DEVICE_NAMES=1 rootdelay=300 console=ttyS0,115200 console=tty0 earlyprintk=ttyS0,115200"
+            bootpartition="false"
+            bootkernel="custom"
+            devicepersistency="by-uuid"
+            btrfs_root_is_snapshot="true"
+        >
+            <systemdisk>
+                <volume name="home"/>
+                <volume name="root"/>
+                <volume name="tmp"/>
+                <volume name="opt"/>
+                <volume name="srv"/>
+                <volume name="boot/grub2/i386-pc"/>
+                <volume name="boot/grub2/x86_64-efi" mountpoint="boot/grub2/x86_64-efi"/>
+                <volume name="usr/local"/>
+                <volume name="var" copy_on_write="false"/>
+            </systemdisk>
+            <size unit="G">24</size>
+        </type>
+    </preferences>
+
+    <preferences profiles="RaspberryPi">
+        <version>15.0</version>
+        <packagemanager>zypper</packagemanager>
+        <bootsplash-theme>SLE</bootsplash-theme>
+        <bootloader-theme>SLE</bootloader-theme>
+    <!-- those settings are applied by suseConfig in config.sh
+        <locale>en_US</locale>
+        <keytable>us.map.gz</keytable>
+        <timezone>Europe/Berlin</timezone>
+        <hwclock>utc</hwclock>
+    -->
+        <rpm-excludedocs>true</rpm-excludedocs>
+        <type
+            image="oem"
+            initrd_system="dracut"
+            filesystem="btrfs"
+            fsmountoptions="noatime,compress=lzo"
+            bootloader="grub2"
+            firmware="efi"
+            kernelcmdline="plymouth.enable=0 swiotlb=512 cma=64M console=tty"
+            bootpartition="false"
+            devicepersistency="by-label"
+            btrfs_root_is_snapshot="true"
+            efipartsize="16"
+            editbootinstall="editbootinstall_rpi.sh"
+        >
+            <systemdisk>
+                <volume name="home"/>
+                <volume name="root"/>
+                <volume name="tmp"/>
+                <volume name="opt"/>
+                <volume name="srv"/>
+                <volume name="boot/grub2/arm64-efi" mountpoint="boot/grub2/arm64-efi"/>
+                <volume name="usr/local"/>
+                <volume name="var" copy_on_write="false"/>
+            </systemdisk>
+            <oemconfig>
+              <oem-swap>true</oem-swap>
+              <oem-swapsize>500</oem-swapsize>
+              <oem-skip-verify>true</oem-skip-verify>
+            </oemconfig>
+        </type>
+    </preferences>
+    <repository type="rpm-md" alias="sle-product-sles15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Product-SLES/15/x86_64/product"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-server-applications15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Server-Applications/15/x86_64/product/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-basesystem15-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Basesystem/15/x86_64/product/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-product-sles15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Product-SLES/15/x86_64/update"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-server-applications15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Server-Applications/15/x86_64/update/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-basesystem15-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Basesystem/15/x86_64/update/"/>
+    </repository>
+        <repository type="rpm-md" alias="sle-module-public-cloud-updates-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Updates/SLE-Module-Public-Cloud/15/x86_64/update/"/>
+    </repository>
+    <repository type="rpm-md" alias="sle-module-public-cloud-pool-x86_64">
+            <source path="http://rmt.internal.paredes.pw/repo/SUSE/Products/SLE-Module-Public-Cloud/15/x86_64/product/"/>
+    </repository>
+
+    <drivers profiles="kvm-and-xen,XEN">
+        <file name="drivers/xen/*" arch="x86_64"/>
+        <file name="drivers/block/xen-blkfront.ko" arch="x86_64"/>
+        <file name="drivers/net/xen-netfront.ko" arch="x86_64"/>
+        <file name="drivers/scsi/xen-scsifront.ko" arch="x86_64"/>
+        <file name="drivers/input/misc/xen-kbdfront.ko" arch="x86_64"/>
+        <file name="drivers/pci/xen-pcifront.ko" arch="x86_64"/>
+    </drivers>
+    <packages type="image">
+        <package name="patterns-base-minimal_base"/>
+        <package name="aaa_base-extras"/> <!-- wouldn't be SUSE without that ;-) -->
+        <package name="acl"/>
+        <package name="btrfsprogs"/>
+        <package name="btrfsmaintenance"/>
+        <package name="cron"/> <!-- needed by btrfsmaintenance -->
+        <package name="curl"/> <!-- needed for openQA, maybe delete -->
+        <package name="dracut"/>
+        <package name="fipscheck"/>
+        <package name="group(mail)"/> <!-- needed by useradd bsc#1061838-->
+        <package name="group(wheel)"/>
+        <package name="grub2-branding-SLE" bootinclude="true"/>
+        <package name="iputils"/>
+        <package name="issue-generator"/> <!-- bsc#1084879 -->
+        <package name="zypper-lifecycle-plugin"/> <!-- bsc#1030278 fate#320597 -->
+        <package name="vim"/>
+        <package name="shim" arch="x86_64"/>
+        <package name="grub2"/>
+        <package name="grub2-x86_64-efi" arch="x86_64"/>
+        <package name="grub2-arm64-efi" arch="aarch64"/>
+        <package name="haveged"/>
+        <package name="less" />
+        <package name="tar"/>
+        <package name="parted"/>
+        <package name="rollback-helper"/>
+        <package name="snapper"/>
+        <package name="SUSEConnect"/>
+        <package name="suse-build-key"/>
+        <package name="firewalld"/>
+        <package name="systemd"/>
+        <package name="systemd-sysvinit"/>
+        <package name="timezone"/>
+        <package name="wicked"/>
+        <package name="iproute2"/> 
+        <package name="openssh"/>
+        <package name="rsync"/>
+        <package name="salt-minion"/>
+        <package name="dialog"/>                <!-- this is needed to support simple dialogs at boot time -->
+        <package name="grub2-snapper-plugin"/>  <!-- snapper - grub2 - integration, "small" -->
+	<package name="snapper-zypp-plugin"/>   <!-- this is key snapper/zypp integration, as requested in the PRD -->
+	<package name="supportutils"/>
+	<package name="python"/>
+	<package name="cloud-init-config-suse" />
+	<package name="cloud-init" />
+    </packages>
+
+    <packages type="image" profiles="kvm-and-xen,XEN">
+        <!-- XEN specific packages -->
+        <package name="xen-tools-domU" arch="x86_64"/>
+        <package name="grub2-x86_64-xen" arch="x86_64"/>
+        <package name="xen-libs" arch="x86_64"/>
+        <package name="kernel-default-base"/>
+    </packages>
+    <packages type="image" profiles="VMware">
+        <package name="open-vm-tools" arch="x86_64"/>
+        <package name="kernel-default-base"/>
+    </packages>
+    <packages type="image" profiles="OpenStack-Cloud">
+        <package name="cloud-init" />
+        <package name="cloud-init-config-suse" />
+        <package name="xfsprogs" />
+        <package name="kernel-default-base"/>
+    </packages>
+    <packages type="image" profiles="MS-HyperV">
+        <package name="hyper-v" arch="x86_64"/>
+        <package name="kernel-default-base"/>
+        <!--<package name="python-azure-agent"/> disabled until bsc#1061584 is fixed -->
+    </packages>
+    <packages type="image" profiles="RaspberryPi">
+        <package name="raspberrypi-firmware" arch="aarch64"/>
+        <package name="raspberrypi-firmware-config" arch="aarch64"/>
+        <package name="raspberrypi-firmware-dt" arch="aarch64"/>
+        <package name="u-boot-rpi3" arch="aarch64"/>
+        <package name="dracut-kiwi-oem-repart"/>
+        <package name="kernel-default"/>
+        <package name="bcm43xx-firmware"/>
+	<archive name="rpi3-y2firstboot.tar.gz"/>
+
+        <!-- Special SLES for rpi3 -->
+        <!-- Patterns -->
+        <package name="patterns-base-base"/>
+        <package name="patterns-base-x11"/>
+        <!-- Base packages -->
+        <package name="aaa_base-extras"/>
+        <package name="acl"/>
+        <package name="alsa"/>
+        <package name="audit"/>
+        <package name="bluez"/>
+        <package name="branding-SLE"/>
+        <package name="btrfsprogs"/>
+        <package name="gio-branding-SLE"/>
+        <package name="ca-certificates"/>
+        <package name="ca-certificates-mozilla"/>
+        <package name="cracklib-dict-full"/>
+        <package name="dracut"/>
+        <package name="e2fsprogs"/>
+        <package name="elfutils"/>
+        <package name="filesystem"/>
+        <package name="fipscheck"/>
+        <package name="gettext-runtime"/> <!-- Do not use gettext-runtime-mini-->
+        <package name="glibc-locale"/>
+        <package name="gpg2"/>
+        <package name="grub2" bootinclude="true"/>
+        <package name="grub2-arm64-efi" bootinclude="true"/>
+        <package name="insserv-compat"/>
+        <package name="iproute2"/>
+        <package name="iputils"/>
+        <package name="iw"/>
+        <package name="kernel-firmware"/>
+        <package name="krb5"/> <!-- Do not use krb5-mini -->
+        <package name="less"/>
+        <package name="libudev1"/> <!-- Do not use libudev-mini1 -->
+        <package name="libyui-ncurses-pkg8"/>
+        <package name="lvm2"/>
+        <package name="kmod-compat"/>
+        <package name="ncurses-utils"/>
+        <package name="net-tools"/>
+        <!-- extra stuff needed for cloud -->
+        <package name="haveged"/>
+        <package name="nfs-client"/>
+        <package name="rpcbind"/>
+        <package name="openssh"/>
+        <package name="pkg-config"/>
+        <package name="python-base"/>
+        <package name="sudo"/>
+        <package name="sysconfig"/>
+        <package name="sysconfig-netconfig"/>
+        <package name="udev"/>
+        <package name="rsyslog"/>
+        <package name="shadow"/>
+        <package name="sg3_utils"/>
+        <package name="systemd"/> <!-- avoid using systemd-mini -->
+        <package name="systemd-sysvinit"/>
+        <package name="timezone"/>
+        <package name="util-linux-systemd"/>
+        <package name="usbutils"/>
+        <package name="which"/>
+        <package name="wicked"/>
+        <package name="wicked-service"/>
+        <package name="vim"/>
+        <package name="wget"/>
+        <package name="wireless-tools"/>
+        <package name="wpa_supplicant"/>
+        <package name="yast2-firewall"/>
+        <package name="yast2-firstboot"/>
+        <!-- bsc#1078264 -->
+        <package name="grub2-snapper-plugin" bootinclude="true"/>
+        <package name="snapper"/>
+        <package name="yast2-snapper"/>
+        <!-- needed for different regulatory domains (bsc#1012280) -->
+        <package name="crda"/>
+        <package name="wireless-regdb"/>
+        <!-- additional packages needed by firstboot -->
+        <package name="sles-release"/>
+        <package name="yast2-ntp-client"/>
+        <package name="yast2-registration"/>
+        <package name="yast2-users"/>
+        <package name="zypper"/>
+        <package name="indic-fonts"/>
+        <package name="thai-fonts"/>
+        <package name="khmeros-fonts"/>
+        <package name="lklug-fonts"/>
+        <package name="arabic-kacst-fonts"/>
+        <!-- we need to keep our time in sync, because there is no RTC -->
+        <package name="chrony"/>
+        <!-- Base: multiple choices -->
+        <package name="libffi7"/>
+        <package name="libgcc_s1"/>
+        <package name="libgomp1"/>
+        <package name="libitm1"/>
+        <package name="libubsan0"/>
+        <package name="libatomic1"/>
+        <package name="libsystemd0"/> <!-- avoid using libsystemd0-mini -->
+        <package name="unzip"/>
+        <package name="ruby2.5-rubygem-ruby-dbus"/> <!-- needed by yast2-storage -->
+        <package name="ruby2.5-rubygem-gem2rpm"/> <!-- needed by ruby-common -->
+        <package name="ruby2.5-rubygem-cfa"/> <!-- needed by yast2 -->
+        <package name="ruby2.5-rubygem-cheetah"/> <!-- needed by yast2 -->
+        <package name="typelib-1_0-Vte-2.91"/> <!-- typelib(Vte) -->
+        <!-- Drivers -->
+        <package name="xf86-input-evdev"/>
+        <package name="xf86-input-void"/>
+        <package name="xf86-input-libinput"/>
+        <package name="xf86-video-fbdev"/>
+        <!-- Other X11 packages -->
+        <package name="gconf2"/>
+        <package name="xfd"/>
+        <package name="xfontsel"/>
+        <package name="xgamma"/>
+        <package name="xhost"/>
+        <package name="xinit"/>
+        <package name="xinput"/>
+        <package name="xkbcomp"/>
+        <package name="xkbevd"/>
+        <package name="xkbprint"/>
+        <package name="xkbutils"/>
+        <package name="xkeyboard-config"/>
+        <package name="xkill"/>
+        <package name="xlogo"/>
+        <package name="xlsatoms"/>
+        <package name="xlsclients"/>
+        <package name="xlsfonts"/>
+        <package name="xmag"/>
+        <package name="xmessage"/>
+        <package name="xmodmap"/>
+        <package name="xorg-x11"/>
+        <package name="xorg-x11-fonts-core"/>
+        <package name="xorg-x11-server"/>
+        <package name="xorg-x11-server-extra"/>
+        <package name="xprop"/>
+        <package name="xrandr"/>
+        <package name="xrdb"/>
+        <package name="xrestop"/>
+        <package name="xscope"/>
+        <package name="xscreensaver"/>
+        <package name="xscreensaver-data"/>
+        <package name="xset"/>
+        <package name="xsetmode"/>
+        <package name="xsetpointer"/>
+        <package name="xsetroot"/>
+        <package name="xterm"/>
+        <package name="xtermset"/>
+        <package name="xvinfo"/>
+        <package name="xwd"/>
+        <package name="xwininfo"/>
+        <package name="xdm"/>
+        <package name="x11-tools"/>
+        <package name="x11perf"/>
+        <package name="xauth"/>
+        <package name="xbacklight"/>
+        <package name="xclock"/>
+        <package name="xconsole"/>
+        <package name="xcursor-themes"/>
+        <package name="xcursorgen"/>
+        <package name="xdg-user-dirs"/>
+        <package name="xdg-user-dirs-gtk"/>
+        <package name="xdg-user-dirs-gtk-lang"/>
+        <package name="xdg-utils"/>
+        <package name="xdmbgrd"/>
+        <package name="xdpyinfo"/>
+        <package name="xev"/>
+        <package name="xeyes"/>
+        <package name="yast2-x11"/>
+        <package name="libyui-qt-pkg8"/> <!-- bsc#1095870 -->
+        <package name="yast2-control-center-qt"/>
+        <package name="gtk3-metatheme-adwaita"/>
+        <package name="gtk2-metatheme-adwaita"/>
+        <!-- Branding -->
+        <package name="grub2-branding-SLE" bootinclude="true"/>
+        <package name="branding-SLE"/>
+        <package name="MozillaFirefox-branding-SLE"/>
+        <package name="release-notes-sles"/>
+        <!-- Translations -->
+        <package name="firewalld-lang"/>
+        <package name="glib-networking-lang"/>
+        <package name="gstreamer-lang"/>
+        <package name="tcsh-lang"/>
+        <package name="gconf2-lang"/>
+        <package name="tar-lang"/>
+        <package name="cpio-lang"/>
+        <package name="sharutils-lang"/>
+        <package name="xz-lang"/>
+        <package name="gpg2-lang"/>
+        <package name="sed-lang"/>
+        <package name="xkeyboard-config-lang"/>
+        <package name="xscreensaver-lang"/>
+        <package name="gsettings-desktop-schemas-lang"/>
+        <package name="psmisc-lang"/>
+        <package name="coreutils-lang"/>
+        <package name="util-linux-lang"/>
+        <package name="at-spi2-core-lang"/>
+        <package name="vorbis-tools-lang"/>
+        <package name="yast2-trans-af"/>
+        <package name="yast2-trans-ar"/>
+        <package name="yast2-trans-bg"/>
+        <package name="yast2-trans-bn"/>
+        <package name="yast2-trans-bs"/>
+        <package name="yast2-trans-ca"/>
+        <package name="yast2-trans-cs"/>
+        <package name="yast2-trans-cy"/>
+        <package name="yast2-trans-da"/>
+        <package name="yast2-trans-de"/>
+        <package name="yast2-trans-el"/>
+        <package name="yast2-trans-en_GB"/>
+        <package name="yast2-trans-en_US"/>
+        <package name="yast2-trans-es"/>
+        <package name="yast2-trans-et"/>
+        <package name="yast2-trans-fa"/>
+        <package name="yast2-trans-fi"/>
+        <package name="yast2-trans-fr"/>
+        <package name="yast2-trans-gl"/>
+        <package name="yast2-trans-gu"/>
+        <package name="yast2-trans-hi"/>
+        <package name="yast2-trans-hr"/>
+        <package name="yast2-trans-hu"/>
+        <package name="yast2-trans-id"/>
+        <package name="yast2-trans-it"/>
+        <package name="yast2-trans-ja"/>
+        <package name="yast2-trans-jv"/>
+        <package name="yast2-trans-ka"/>
+        <package name="yast2-trans-km"/>
+        <package name="yast2-trans-ko"/>
+        <package name="yast2-trans-lo"/>
+        <package name="yast2-trans-lt"/>
+        <package name="yast2-trans-mk"/>
+        <package name="yast2-trans-mr"/>
+        <package name="yast2-trans-nb"/>
+        <package name="yast2-trans-nl"/>
+        <package name="yast2-trans-pa"/>
+        <package name="yast2-trans-pl"/>
+        <package name="yast2-trans-pt"/>
+        <package name="yast2-trans-pt_BR"/>
+        <package name="yast2-trans-ro"/>
+        <package name="yast2-trans-ru"/>
+        <package name="yast2-trans-si"/>
+        <package name="yast2-trans-sk"/>
+        <package name="yast2-trans-sl"/>
+        <package name="yast2-trans-sr"/>
+        <package name="yast2-trans-sv"/>
+        <package name="yast2-trans-ta"/>
+        <package name="yast2-trans-th"/>
+        <package name="yast2-trans-tr"/>
+        <package name="yast2-trans-uk"/>
+        <package name="yast2-trans-vi"/>
+        <package name="yast2-trans-wa"/>
+        <package name="yast2-trans-xh"/>
+        <package name="yast2-trans-zh_CN"/>
+        <package name="yast2-trans-zh_TW"/>
+        <package name="yast2-trans-zu"/>
+        <package name="desktop-translations"/>
+        <package name="bash-lang"/>
+        <package name="icewm-lang"/>
+        <package name="parted-lang"/>
+        <package name="shared-mime-info-lang"/>
+        <package name="findutils-lang"/>
+        <!-- X11/IceWM-specific packages -->
+        <package name="icewm"/>
+        <package name="icewm-lite"/>
+        <package name="icewm-default"/>
+        <package name="icewm-theme-branding"/>
+        <package name="polkit-gnome-lang"/>
+        <package name="polkit-default-privs"/>
+        <package name="mutt"/> <!-- for IceWM taskbar mailbox icon (bsc#1093913) -->
+        <package name="mutt-lang"/>
+        <!-- manuals (bsc#1093914) -->
+        <package name="man"/>
+        <package name="man-pages"/>
+    </packages>
+
+
+    <packages type="bootstrap">
+        <package name="udev"/>
+        <package name="filesystem"/>
+        <package name="glibc-locale"/>
+        <package name="ca-certificates"/>
+        <package name="sles-release"/>
+    </packages>
+</image>
