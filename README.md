@@ -1,1 +1,1 @@
-Start by implementing steps in kiwi-config.txt
+Start by implementing steps in kiwi-build.txt
