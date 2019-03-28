@@ -37,6 +37,10 @@ if [ "${kiwi_profiles}" = "OpenStack-Cloud" ]; then
 elif [ -f "/etc/YaST2/firstboot.xml" ]; then
 	# prefer yast2-firstboot over jeos-firstboot and systemd-firstboot
 	systemctl mask systemd-firstboot.service
+	suseInsertService cloud-init-local
+        suseInsertService cloud-init
+        suseInsertService cloud-config
+        suseInsertService cloud-final
 	touch /var/lib/YaST2/reconfig_system
 	# Allow for modified firstboot flow
 	if [ -f /etc/YaST2/firstboot-rpi3.xml ]; then
@@ -47,4 +51,8 @@ elif [ -f "/etc/YaST2/firstboot.xml" ]; then
 else
 	# use jeos-firstboot.service instead of systemd-firstboot.service
 	systemctl mask systemd-firstboot.service
+	suseInsertService cloud-init-local
+        suseInsertService cloud-init
+        suseInsertService cloud-config
+        suseInsertService cloud-final
 fi
